@@ -1,8 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
+from django.conf import settings
 
 # Create your models here.
+
 class ProductManager(models.Manager):
     def get_queryset(self):
         return super(ProductManager, self).get_queryset().filter(is_active=True)
@@ -24,7 +26,7 @@ class Category(models.Model):
 class Product(models.Model):
     category=models.ForeignKey(Category, on_delete=models.CASCADE, related_name='product')
     author=models.CharField(max_length=200, default='admin')
-    createdBy=models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='product_creator')
     title=models.CharField(max_length=200, null=True)
     image=models.ImageField(upload_to='images/', null=True)
     slug=models.SlugField(max_length=200, unique=True, null=True)
